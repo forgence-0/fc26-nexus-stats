@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC26 Custom EA Trax's — Nexus Skorbordu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-black:#0A1410;
+    --pitch-surface:#11201A;
+    --pitch-surface-2:#16271F;
+    --floodlight:#F4C744;
+    --turf:#2E7D5B;
+    --chalk:#EDEFE9;
+    --chalk-dim:#8B9690;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(244,199,68,0.07), transparent 55%),
+      var(--pitch-black);
+    color:var(--chalk);
+    font-family:'Oswald',sans-serif;
+    min-height:100vh;
+  }
+
+  body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:32px 20px 48px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:880px;
+  }
+
+  /* ---- header ---- */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:12px;
+    border-bottom:1px solid rgba(139,150,144,0.25);
+    padding-bottom:18px;
+    margin-bottom:28px;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    color:var(--chalk-dim);
+    text-transform:uppercase;
+    margin:0 0 6px;
+  }
+
+  h1{
+    margin:0;
+    font-size:clamp(22px,4vw,32px);
+    font-weight:700;
+    letter-spacing:.01em;
+    text-transform:uppercase;
+  }
+
+  h1 a{
+    color:var(--chalk);
+    text-decoration:none;
+    border-bottom:2px solid var(--turf);
+  }
+  h1 a:hover, h1 a:focus-visible{ border-bottom-color:var(--floodlight); }
+
+  .live-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--chalk-dim);
+  }
+
+  .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--floodlight);
+    box-shadow:0 0 0 0 rgba(244,199,68,.6);
+    animation:ping 2.2s infinite;
+  }
+  @keyframes ping{
+    0%{box-shadow:0 0 0 0 rgba(244,199,68,.55);}
+    70%{box-shadow:0 0 0 9px rgba(244,199,68,0);}
+    100%{box-shadow:0 0 0 0 rgba(244,199,68,0);}
+  }
+
+  /* ---- scoreboard ---- */
+  .board{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:rgba(139,150,144,0.25);
+    border:1px solid rgba(139,150,144,0.25);
+    border-radius:4px;
+    overflow:hidden;
+  }
+
+  .stat{
+    background:var(--pitch-surface);
+    padding:26px 16px 22px;
+    text-align:center;
+  }
+
+  .stat-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    margin:0 0 12px;
+  }
+
+  .stat-value{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:clamp(28px,6vw,44px);
+    font-variant-numeric:tabular-nums;
+    color:var(--floodlight);
+    letter-spacing:.02em;
+  }
+
+  .stat-value.placeholder{ color:var(--chalk-dim); font-weight:500; }
+
+  .stat-value.pulse{ animation:flash .7s ease; }
+  @keyframes flash{
+    0%{ color:var(--chalk); transform:translateY(-3px); }
+    100%{ color:var(--floodlight); transform:translateY(0); }
+  }
+
+  /* ---- ticker ---- */
+  .ticker{
+    margin-top:22px;
+    border:1px solid rgba(139,150,144,0.25);
+    border-radius:4px;
+    background:var(--pitch-surface-2);
+    overflow:hidden;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+  }
+
+  .ticker-label{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    color:var(--pitch-black);
+    background:var(--turf);
+    padding:10px 14px;
+    text-transform:uppercase;
+  }
+
+  .ticker-track{
+    flex:1 1 auto;
+    overflow:hidden;
+  }
+
+  .ticker-track span{
+    display:inline-block;
+    padding-left:100%;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--chalk-dim);
+    animation:scroll 38s linear infinite;
+  }
+
+  @keyframes scroll{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-100%); }
+  }
+
+  /* ---- footer ---- */
+  footer{
+    margin-top:22px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--chalk-dim);
+  }
+
+  footer a{ color:var(--chalk-dim); }
+  footer a:hover, footer a:focus-visible{ color:var(--floodlight); }
+
+  button#refresh{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:transparent;
+    border:1px solid rgba(139,150,144,0.4);
+    color:var(--chalk-dim);
+    padding:6px 10px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  button#refresh:hover, button#refresh:focus-visible{
+    color:var(--floodlight);
+    border-color:var(--floodlight);
+  }
+
+  @media (max-width:560px){
+    .board{ grid-template-columns:1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot{ animation:none; }
+    .ticker-track span{ animation:none; }
+    .stat-value.pulse{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <header>
+      <div>
+        <p class="eyebrow">EA Sports FC 26 · Nexus Mods skorbordu</p>
+        <h1><a href="https://www.nexusmods.com/easportsfc26/mods/1021" target="_blank" rel="noopener">FC26 Custom EA Trax's</a></h1>
+      </div>
+      <div class="live-pill">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="updated-text">veri yükleniyor…</span>
+      </div>
+    </header>
+
+    <section class="board" aria-label="Mod istatistikleri">
+      <div class="stat">
+        <p class="stat-label">Unique DLs</p>
+        <p class="stat-value placeholder" id="unique-dls">—</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Total DLs</p>
+        <p class="stat-value placeholder" id="total-dls">—</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Total views</p>
+        <p class="stat-value placeholder" id="total-views">—</p>
+      </div>
+    </section>
+
+    <div class="ticker">
+      <span class="ticker-label">Şimdi çalıyor</span>
+      <div class="ticker-track">
+        <span>Noano &amp; Lil Kleine — Ewa Safi&nbsp;&nbsp;·&nbsp;&nbsp; Uzi — XXL&nbsp;&nbsp;·&nbsp;&nbsp; Flo Rida &amp; Sage The Gemini, LooKas — GDFR&nbsp;&nbsp;·&nbsp;&nbsp; Blok3 — UYUZ&nbsp;&nbsp;·&nbsp;&nbsp; Ceza — Holocaust&nbsp;&nbsp;·&nbsp;&nbsp; Snoop Dogg &amp; The Doors — Riders On The Storm&nbsp;&nbsp;·&nbsp;&nbsp; Future — Mask Off&nbsp;&nbsp;·&nbsp;&nbsp; Kavak — Sen Kimsin&nbsp;&nbsp;·&nbsp;&nbsp; Dr. Dre &amp; Snoop Dogg — Still D.R.E.&nbsp;&nbsp;·&nbsp;&nbsp; Kanye West &amp; Big Sean, Pusha T, 2 Chainz — Mercy&nbsp;&nbsp;·&nbsp;&nbsp; Ezhel — LOLO&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+    <footer>
+      <span>Veri, <a href="https://github.com/" id="repo-link">GitHub Actions</a> ile periyodik olarak çekilir — saniyelik değil.</span>
+      <button id="refresh" type="button">Yenile</button>
+    </footer>
+
+  </div>
+
+<script>
+  const DATA_URL = 'stats.json';
+  const POLL_MS = 10000; // sayfa bu sıklıkla stats.json dosyasını yeniden okur
+
+  const els = {
+    unique: document.getElementById('unique-dls'),
+    total: document.getElementById('total-dls'),
+    views: document.getElementById('total-views'),
+    updated: document.getElementById('updated-text'),
+  };
+
+  let last = null;
+
+  function setValue(el, value){
+    const text = (value === null || value === undefined) ? '—' : String(value);
+    if(last !== null && el.textContent !== text){
+      el.classList.remove('pulse');
+      void el.offsetWidth; // reflow, animasyonu yeniden tetiklemek için
+      el.classList.add('pulse');
+    }
+    el.textContent = text;
+    el.classList.toggle('placeholder', text === '—');
+  }
+
+  function relativeTime(iso){
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const min = Math.round(diffMs / 60000);
+    if(min < 1) return 'az önce güncellendi';
+    if(min === 1) return '1 dakika önce güncellendi';
+    if(min < 60) return `${min} dakika önce güncellendi`;
+    const h = Math.round(min / 60);
+    return `${h} saat önce güncellendi`;
+  }
+
+  async function load(){
+    try{
+      const res = await fetch(`${DATA_URL}?t=${Date.now()}`, { cache: 'no-store' });
+      if(!res.ok) throw new Error('stats.json okunamadı');
+      const data = await res.json();
+
+      setValue(els.unique, data.unique_dls);
+      setValue(els.total, data.total_dls);
+      setValue(els.views, data.total_views);
+      els.updated.textContent = data.updated_at ? relativeTime(data.updated_at) : 'güncelleme zamanı yok';
+
+      last = data;
+    }catch(err){
+      els.updated.textContent = 'stats.json bulunamadı (henüz ilk çalıştırma yapılmamış olabilir)';
+    }
+  }
+
+  document.getElementById('refresh').addEventListener('click', load);
+
+  load();
+  setInterval(load, POLL_MS);
+</script>
+
+</body>
+</html>
